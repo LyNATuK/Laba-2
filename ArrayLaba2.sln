@@ -1,31 +1,360 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1259
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ArrayLaba2", "ArrayLaba2\ArrayLaba2.vcxproj", "{0F7117C2-F0DD-4F7A-B1D9-D6FEBF19BAC0}"
-EndProject
-Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
-		Release|x64 = Release|x64
-		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0F7117C2-F0DD-4F7A-B1D9-D6FEBF19BAC0}.Debug|x64.ActiveCfg = Debug|x64
-		{0F7117C2-F0DD-4F7A-B1D9-D6FEBF19BAC0}.Debug|x64.Build.0 = Debug|x64
-		{0F7117C2-F0DD-4F7A-B1D9-D6FEBF19BAC0}.Debug|x86.ActiveCfg = Debug|Win32
-		{0F7117C2-F0DD-4F7A-B1D9-D6FEBF19BAC0}.Debug|x86.Build.0 = Debug|Win32
-		{0F7117C2-F0DD-4F7A-B1D9-D6FEBF19BAC0}.Release|x64.ActiveCfg = Release|x64
-		{0F7117C2-F0DD-4F7A-B1D9-D6FEBF19BAC0}.Release|x64.Build.0 = Release|x64
-		{0F7117C2-F0DD-4F7A-B1D9-D6FEBF19BAC0}.Release|x86.ActiveCfg = Release|Win32
-		{0F7117C2-F0DD-4F7A-B1D9-D6FEBF19BAC0}.Release|x86.Build.0 = Release|Win32
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {72EF9503-99A0-4FB6-BE35-9570AC8F7E56}
-	EndGlobalSection
-EndGlobal
+#include <iostream>
+#include <chrono>
+#include <ctime> 
+
+using namespace std;
+
+typedef chrono::high_resolution_clock Clock;
+typedef chrono::duration<double> sec;
+
+int arrInt[100]; // изначальный массив
+int arrIntSort[100]; // отсортированный массив
+
+int min;
+int max;
+
+int repeat = 0;
+
+float average = 0;
+
+Clock::time_point timeStart;
+Clock::time_point timeEnd;
+
+void CreateArray(); // создаем массив
+void SortingArray(); // сортируем массив
+void FindMin(); // находим минимальные элементы массивов
+void FindMax(); // находим максимальные элементы массивов
+void AverageValue(); // среднее значение мин/мах
+void FindIdenticalElements(); // поиск одинаковых элементов равных среднему значению мин/мах
+void SmallerNumbers(); // кол-во чисел меньших числа А
+void BiggerNumbers(); // кол-во чисел больших числа Б
+void BinaryNumberSearch(); // бинарный поиск введенного числа в массиве
+void ReplacementElements(); // замена двух элементов местами
+
+void SortingShaker(); // для индивидуального задания
+
+int main()
+{
+	setlocale(LC_ALL, "Russian");
+	srand(time(NULL));
+
+	do{
+		CreateArray();
+
+		SortingArray();
+
+		repeat = 0;
+		cout << "Повторить? (0 - нет / 1 - да): ";
+		cin >> repeat;
+		cout << endl;
+	} while (repeat == 1);
+
+	do {
+		FindMin();
+		FindMax();
+
+		repeat = 0;
+		cout << "Повторить? (0 - нет / 1 - да): ";
+		cin >> repeat;
+		cout << endl;
+	} while (repeat == 1);
+
+	do {
+		AverageValue();
+		FindIdenticalElements();
+
+		repeat = 0;
+		cout << "Повторить? (0 - нет / 1 - да): ";
+		cin >> repeat;
+		cout << endl;
+	} while (repeat == 1);
+
+	do {
+		SmallerNumbers();
+
+		repeat = 0;
+		cout << "Повторить? (0 - нет / 1 - да): ";
+		cin >> repeat;
+		cout << endl;
+	} while (repeat == 1);
+
+	do {
+		BiggerNumbers();
+
+		repeat = 0;
+		cout << "Повторить? (0 - нет / 1 - да): ";
+		cin >> repeat;
+		cout << endl;
+	} while (repeat == 1);
+
+	do {
+		BinaryNumberSearch();
+
+		repeat = 0;
+		cout << "Повторить? (0 - нет / 1 - да): ";
+		cin >> repeat;
+		cout << endl;
+	} while (repeat == 1);
+
+	do {
+		ReplacementElements();
+
+		repeat = 0;
+		cout << "Повторить? (0 - нет / 1 - да): ";
+		cin >> repeat;
+		cout << endl;
+	} while (repeat == 1);
+
+	do {
+		SortingShaker();
+
+		repeat = 0;
+		cout << "Повторить? (0 - нет / 1 - да): ";
+		cin >> repeat;
+		cout << endl;
+	} while (repeat == 1);
+
+	cout << "End.";
+}
+
+void CreateArray() {
+	for (int i = 0; i < size(arrInt); i++) {
+		arrInt[i] = rand() % 199 - 99;
+		arrIntSort[i] = arrInt[i]; // копия массива
+	}
+}
+
+void SortingArray() {
+	int temp; // временная переменная для обмена элементов местами
+
+	timeStart = Clock::now();
+	for (int i = 0; i < size(arrIntSort) - 1; i++) { // Сортировка массива пузырьком
+		for (int j = 0; j < size(arrIntSort) - i - 1; j++) {
+			if (arrIntSort[j] > arrIntSort[j + 1]) {
+				// меняем элементы местами
+				temp = arrIntSort[j];
+				arrIntSort[j] = arrIntSort[j + 1];
+				arrIntSort[j + 1] = temp;
+			}
+		}
+	}
+	timeEnd = Clock::now();
+	cout << sec(timeEnd - timeStart).count() << " время затраченное на сортировку массива. (Bubble sort)\n" << endl;
+
+	for (int i = 0; i < size(arrIntSort); i++) {
+		cout << arrIntSort[i] << " ";
+	}
+	cout << " отсортированный массив" << endl;
+
+	cout << endl;
+}
+
+void FindMin() {
+
+	min = 100;
+
+	timeStart = Clock::now();
+	for (int i = 0; i < size(arrInt) - 1; i++) { // поиск минимального в неотсортированном массиве
+		if (arrInt[i] < min) {
+			min = arrInt[i];
+		}
+	}
+	timeEnd = Clock::now();
+	cout << "Минимальный элемент:" << min << ".\nВремени на нахождение потребовалось в неотсортированном массиве: " << sec(timeEnd - timeStart).count() << " сек." << endl;
+
+	min = 100;
+	timeStart = Clock::now();
+	for (int i = 0; i < size(arrIntSort) - 1; i++) { // поиск минимального в отсортированном массиве
+		if (arrIntSort[i] < min) {
+			min = arrIntSort[i];
+		}
+	}
+	timeEnd = Clock::now();
+	cout << "Времени на нахождение потребовалось в отсортированном: " << sec(timeEnd - timeStart).count() << " сек." << endl;
+
+	cout << endl;
+}
+
+void FindMax() {
+
+	max = -100;
+
+	timeStart = Clock::now();
+	for (int i = 0; i < size(arrInt) - 1; i++) { // поиск максимального в неотсортированном массиве
+		if (arrInt[i] > max) {
+			max = arrInt[i];
+		}
+	}
+	timeEnd = Clock::now();
+	cout << "Минимальный элемент:" << max << ".\nВремени на нахождение потребовалось в неотсортированном массиве: " << sec(timeEnd - timeStart).count() << " сек." << endl;
+
+	max = -100;
+	timeStart = Clock::now();
+	for (int i = 0; i < size(arrIntSort) - 1; i++) { // поиск максимального в отсортированном массиве
+		if (arrIntSort[i] > max) {
+			max = arrIntSort[i];
+		}
+	}
+	timeEnd = Clock::now();
+	cout << "Времени на нахождение потребовалось в отсортированном: " << sec(timeEnd - timeStart).count() << " сек." << endl;
+
+	cout << endl;
+}
+
+void AverageValue() {
+	average = (min + max) / 2;
+	cout << "Среднее значение минимального и максимального элемента массива: " << average << endl;
+}
+
+void FindIdenticalElements() {
+	int countIdentidal = 0;
+
+	cout << "Индексы элементов равных среднему MIN/MAX: ";
+	for (int i = 0; i < size(arrIntSort) - 1; i++) { 
+		if (arrIntSort[i] == average) {
+			cout << i << " ";
+			countIdentidal++;
+		}
+	}
+	cout << "\nКоличество элементов равных среднему MIN/MAX: " << countIdentidal << endl;
+
+	cout << endl;
+}
+
+void SmallerNumbers() {
+	int inputValue = 0;
+	cout << "Введите число до которого будет подсчет меньших чисел: ";
+	cin >> inputValue;
+
+	int count = 0;
+
+	for (int i = 0; i < size(arrIntSort) - 1; i++) {
+		if (arrIntSort[i] < inputValue) {
+			count++;
+		}
+	}
+	cout << "Количество чисел меньших числа " << inputValue << ": " << count <<endl;
+
+	cout << endl;
+}
+
+void BiggerNumbers() {
+	int inputValue = 0;
+	cout << "Введите число до которого будет подсчет больших чисел: ";
+	cin >> inputValue;
+
+	int count = 0;
+
+	for (int i = 0; i < size(arrIntSort); i++) {
+		if (arrIntSort[i] > inputValue) {
+			count++;
+		}
+	}
+	cout << "Количество чисел меньших числа " << inputValue << ": " << count << endl;
+
+	cout << endl;
+}
+
+void BinaryNumberSearch() {
+
+	bool flag = false;
+	int l = -99; // левая граница
+	int r = 98; // правая граница
+	int mid;
+	int valueInput;
+
+	cout << "Введите число которое нужно найти: ";
+	cin >> valueInput; // считываем ключ
+
+	timeStart = Clock::now();
+	while ((l <= r) && (flag != true)) {
+		mid = (l + r) / 2; // считываем срединный индекс отрезка
+
+		if (arrIntSort[mid] == valueInput)
+			flag = true; //проверяем ключ со серединным элементом
+		if (arrIntSort[mid] > valueInput)
+			r = mid - 1; // проверяем, какую часть нужно отбросить
+		else
+			l = mid + 1;
+	}
+	timeEnd = Clock::now();
+
+	if (flag)
+		cout << "Введенный элемент " << valueInput << " существует в данном массиве." << endl;
+	else
+		cout << "Введенного элемента в массиве нет" << endl;
+
+	cout << endl;
+	cout << sec(timeEnd - timeStart).count() << " время затраченное на бинарный поиск элемента." << endl;
+
+	{
+		timeStart = Clock::now();
+		for (int i = 0; i < size(arrIntSort) - 1; i++) {
+			if (arrIntSort[i] == valueInput) {
+				max = arrIntSort[i];
+				break;
+			}
+		}
+		timeEnd = Clock::now();
+		cout << sec(timeEnd - timeStart).count() << " время затраченное на обычный поиск элемента." << endl;
+	}
+
+	cout << endl;
+}
+
+void ReplacementElements() {
+
+	int elemFirst;
+	int elemSecond;
+
+	cout << "Введите индексы элементов массива которые нужно поменять местами: " << endl;
+	cin >> elemFirst >> elemSecond;
+	cout << endl;
+
+	timeStart = Clock::now();
+	int elemTemp = arrIntSort[elemFirst];
+	arrIntSort[elemFirst] = arrIntSort[elemSecond];
+	arrIntSort[elemSecond] = elemTemp;
+	timeEnd = Clock::now();
+
+	cout << "Измененный массив:" << endl;
+	for (int i = 0; i < size(arrIntSort); i++) {
+		cout << arrIntSort[i] << " ";
+	}
+
+	cout << endl << sec(timeEnd - timeStart).count() << " времени потребовалось на замену элементов." << endl;
+
+}
+
+void SortingShaker() {
+	for (int i = 0; i < size(arrInt); i++) {
+		arrIntSort[i] = arrInt[i]; // копия массива
+	}
+
+	bool sort_or_not = true;
+
+	timeStart = Clock::now();
+	do {
+		sort_or_not = true;
+		for (int i = 0; i < size(arrIntSort); i++) {
+			if (arrIntSort[i] > arrIntSort[i + 1]) {
+				swap(arrIntSort[i], arrIntSort[i + 1]);
+				sort_or_not = false;
+			}
+		}
+		for (int i = 4; i >= 1; i--) {
+			if (arrIntSort[i] < arrIntSort[i - 1]) {
+				swap(arrIntSort[i], arrIntSort[i - 1]);
+				sort_or_not = false;
+			}
+		}
+	} while (sort_or_not == false);
+	timeEnd = Clock::now();
+
+	cout << "Измененный массив:" << endl;
+	for (int i = 0; i < size(arrIntSort); i++) {
+		cout << arrIntSort[i] << " ";
+	}
+
+	cout << endl << sec(timeEnd - timeStart).count() << " времени потребовалось на сортировку элементов. (Shaker Sort)" << endl;
+}
